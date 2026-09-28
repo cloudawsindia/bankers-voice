@@ -1,0 +1,27 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<meta name="robots" content="noindex,nofollow">
+<title>Admin | Bankers Voice India</title>
+<meta name="theme-color" content="#071A33">
+<link rel="icon" type="image/png" href="icon-192.png">
+<link rel="stylesheet" href="style.css">
+</head>
+<body style="display:block">
+<main id="main" tabindex="-1"><p class="loading">Loading…</p></main>
+<script src="supabase.js"></script>
+<script src="common.js"></script>
+<script src="admin.js"></script>
+<script>
+window.addEventListener('load', function () {
+  setTimeout(function () {
+    if (window.__admReady) return;
+    var m = document.getElementById('main');
+    if (m && m.querySelector('.loading')) m.innerHTML = '<div class="adm-login"><section class="panel"><h1>Admin could not start</h1><p>Make sure admin.js, common.js, style.css and supabase.js are uploaded next to admin.html, then reload with Ctrl+Shift+R.</p></section></div>';
+  }, 9000);
+});
+</script>
+</body>
+</html>

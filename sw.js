@@ -1,28 +1,16 @@
-// Bankers Voice India — minimal offline shell. Never caches API traffic.
-const CACHE = 'bv-shell-v1';
-const SHELL = ['./', './index.html', './manifest.webmanifest', './icon-192.png', './icon-512.png',
-  './supabase.js',
-  'newsreader-latin-400-normal.woff2', 'newsreader-latin-600-normal.woff2',
-  'atkinson-hyperlegible-latin-400-normal.woff2', 'atkinson-hyperlegible-latin-700-normal.woff2'];
-
-self.addEventListener('install', e => {
-  e.waitUntil(caches.open(CACHE).then(c => c.addAll(SHELL)).then(() => self.skipWaiting()));
-});
+/* Bankers Voice India — service worker: app shell offline, never caches API calls */
+const V = 'bv-v3';
+const ASSETS = ['./', 'index.html', 'style.css', 'common.js', 'app.js', 'supabase.js', 'manifest.webmanifest', 'icon-192.png', 'icon-512.png',
+  'dm-serif-display-latin-400-normal.woff2', 'manrope-latin-400-normal.woff2', 'manrope-latin-600-normal.woff2', 'manrope-latin-800-normal.woff2'];
+self.addEventListener('install', e => { e.waitUntil(caches.open(V).then(c => c.addAll(ASSETS)).then(() => self.skipWaiting())); });
 self.addEventListener('activate', e => {
-  e.waitUntil(caches.keys().then(keys => Promise.all(keys.filter(k => k !== CACHE).map(k => caches.delete(k))))
-    .then(() => self.clients.claim()));
+  e.waitUntil(caches.keys().then(keys => Promise.all(keys.filter(k => k !== V).map(k => caches.delete(k)))).then(() => self.clients.claim()));
 });
 self.addEventListener('fetch', e => {
-  const req = e.request;
-  const url = new URL(req.url);
-  if (req.method !== 'GET' || url.origin !== self.location.origin) return;   // API calls go straight to network
-  // network-first for the page so updates arrive; fall back to cache offline
-  if (req.mode === 'navigate') {
-    e.respondWith(fetch(req).then(r => { const cp = r.clone(); caches.open(CACHE).then(c => c.put('./index.html', cp)); return r; })
-      .catch(() => caches.match('./index.html')));
-    return;
-  }
-  e.respondWith(caches.match(req).then(hit => hit || fetch(req).then(r => {
-    const cp = r.clone(); caches.open(CACHE).then(c => c.put(req, cp)); return r;
-  })));
+  const r = e.request;
+  if (r.method !== 'GET' || new URL(r.url).origin !== location.origin) return;
+  const fresh = r.mode === 'navigate' || /\.(html|js|css)$/.test(new URL(r.url).pathname);
+  e.respondWith(fresh
+    ? fetch(r).then(res => { const copy = res.clone(); caches.open(V).then(c => c.put(r, copy)); return res; }).catch(() => caches.match(r).then(m => m || caches.match('index.html')))
+    : caches.match(r).then(m => m || fetch(r).then(res => { const copy = res.clone(); caches.open(V).then(c => c.put(r, copy)); return res; })));
 });
