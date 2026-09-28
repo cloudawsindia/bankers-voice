@@ -1,0 +1,808 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<title>Bankers Voice India</title>
+<meta name="description" content="A common platform for bankers to express their views on issues that matter to them. Your identity stays private.">
+<meta name="theme-color" content="#0A2647">
+<link rel="manifest" href="manifest.webmanifest">
+<link rel="icon" type="image/png" href="icon-192.png">
+<link rel="apple-touch-icon" href="icon-192.png">
+<style>
+@font-face{font-family:"Newsreader";font-weight:400;font-style:normal;font-display:swap;src:url(newsreader-latin-400-normal.woff2) format("woff2")}
+@font-face{font-family:"Newsreader";font-weight:600;font-style:normal;font-display:swap;src:url(newsreader-latin-600-normal.woff2) format("woff2")}
+@font-face{font-family:"Atkinson Hyperlegible";font-weight:400;font-style:normal;font-display:swap;src:url(atkinson-hyperlegible-latin-400-normal.woff2) format("woff2")}
+@font-face{font-family:"Atkinson Hyperlegible";font-weight:700;font-style:normal;font-display:swap;src:url(atkinson-hyperlegible-latin-700-normal.woff2) format("woff2")}
+
+:root{
+  --ink:#0A2647; --ink-2:#1F3864; --slate:#4A5A72; --paper:#F6F8FB; --card:#FFFFFF; --line:#D5DDE8;
+  --gold:#C9A227; --gold-deep:#7A5F06; --blue:#1B4F9C; --danger:#A11D33; --ok:#1E6B45;
+  --serif:"Newsreader",Georgia,"Times New Roman",serif;
+  --sans:"Atkinson Hyperlegible",system-ui,-apple-system,"Segoe UI",Roboto,sans-serif;
+}
+*{box-sizing:border-box}
+html{-webkit-text-size-adjust:100%}
+body{margin:0;background:var(--paper);color:var(--ink);font:400 17px/1.55 var(--sans);
+  padding:env(safe-area-inset-top) env(safe-area-inset-right) env(safe-area-inset-bottom) env(safe-area-inset-left);
+  min-height:100vh;display:flex;flex-direction:column}
+main{flex:1;outline:none}
+a{color:var(--blue)}
+h1,h2,h3{font-family:var(--serif);font-weight:600;color:var(--ink);margin:0;letter-spacing:-.005em}
+h1{font-size:clamp(32px,6.4vw,50px);line-height:1.08}
+h2{font-size:clamp(24px,4.2vw,30px);line-height:1.2}
+h3{font-size:20px;line-height:1.3}
+p{margin:0 0 12px;max-width:62ch}
+.sr{position:absolute!important;width:1px;height:1px;overflow:hidden;clip:rect(0 0 0 0);white-space:nowrap}
+.skip{position:absolute;left:-999px;top:8px;background:var(--ink);color:#fff;padding:10px 14px;border-radius:4px;z-index:10}
+.skip:focus{left:8px}
+:focus-visible{outline:3px solid var(--blue);outline-offset:2px}
+.wrap{max-width:720px;margin:0 auto;padding:0 20px}
+.wrap.wide{max-width:1080px}
+
+/* header */
+.top{background:#fff;border-bottom:1px solid var(--line)}
+.top .in{max-width:1080px;margin:0 auto;padding:12px 20px;display:flex;align-items:center;justify-content:space-between;gap:12px}
+.brand{display:flex;align-items:center;gap:10px;text-decoration:none;color:var(--ink);font:600 20px/1 var(--serif)}
+.brand svg{flex:none}
+.topnav{display:flex;align-items:center;gap:6px}
+.topnav a{color:var(--ink);text-decoration:none;padding:10px 12px;border-radius:4px;font-weight:700;font-size:15px}
+.topnav a:hover{background:var(--paper)}
+
+/* buttons */
+.btn{display:inline-flex;align-items:center;justify-content:center;min-height:46px;padding:10px 22px;border-radius:4px;border:2px solid var(--ink);
+  background:var(--ink);color:#fff;font:700 16px/1.2 var(--sans);cursor:pointer;text-decoration:none}
+.btn:hover{background:var(--ink-2)}
+.btn.alt{background:#fff;color:var(--ink)}
+.btn.alt:hover{background:var(--paper)}
+.btn.danger{background:var(--danger);border-color:var(--danger)}
+.btn[disabled]{opacity:.55;cursor:not-allowed}
+.row{display:flex;flex-wrap:wrap;gap:12px;align-items:center}
+
+/* hero */
+.hero{padding:40px 0 28px}
+.hero .grid{display:grid;gap:32px}
+.hero .lede{font-size:19px;color:var(--slate);margin:16px 0 22px}
+.counter{margin-top:18px;color:var(--slate);font-size:15px}
+@media(min-width:900px){.hero .grid{grid-template-columns:1fr 1fr;align-items:start;gap:56px}.hero{padding:64px 0 40px}}
+
+/* ballot */
+.ballot{background:var(--card);border:1px solid var(--line);border-top:6px solid var(--ink);border-radius:4px;padding:22px 0 0}
+.ballot .head{padding:0 22px 18px}
+.ballot .q{font:600 22px/1.3 var(--serif);margin:0 0 8px}
+.ballot .hint{margin:0;color:var(--slate);font-size:15px}
+.opts{border:0;border-top:1px solid var(--line);margin:0;padding:0;min-width:0}
+.opt{position:relative;display:flex;gap:14px;align-items:flex-start;padding:15px 22px;border-bottom:1px solid var(--line);cursor:pointer}
+.opt:hover{background:#F0F4FA}
+.opt input{position:absolute;opacity:0;width:24px;height:24px;left:22px;top:15px;margin:0}
+.box{flex:none;position:relative;width:24px;height:24px;border:2px solid var(--ink);border-radius:3px;background:#fff;margin-top:1px}
+.opt input[type=radio]+.box{border-radius:50%}
+.opt input:checked+.box{background:var(--gold)}
+.opt input:checked+.box::after{content:"";position:absolute;left:6px;top:1px;width:7px;height:13px;border:solid var(--ink);border-width:0 3px 3px 0;transform:rotate(45deg)}
+.opt input:focus-visible+.box{outline:3px solid var(--blue);outline-offset:2px}
+.opt .txt{padding-top:1px}
+.ballot .foot{padding:18px 22px 22px}
+.ballot .note{font-size:14px;color:var(--slate);margin:12px 0 0}
+.ballot details{padding:0 22px 18px;font-size:15px;color:var(--slate)}
+.ballot summary{cursor:pointer;font-weight:700;color:var(--ink)}
+.done{display:flex;gap:10px;align-items:center;padding:0 22px 6px;font-weight:700;color:var(--ok)}
+
+/* results */
+.results{padding:0 22px 22px}
+.bar-row{margin:0 0 14px}
+.bar-top{display:flex;justify-content:space-between;gap:12px;font-size:16px;margin-bottom:5px}
+.bar-top .num{font-weight:700;white-space:nowrap}
+.bar-top small{font-weight:400;color:var(--slate)}
+.bar{height:12px;background:#E6ECF4;border-radius:2px;overflow:hidden}
+.bar i{display:block;height:100%;background:var(--ink)}
+.bar-row.mine .bar i{background:var(--gold)}
+.mine-tag{display:inline-block;margin-left:8px;font-size:13px;font-weight:700;color:var(--gold-deep)}
+.disc{font-size:14px;color:var(--slate);border-top:1px solid var(--line);padding-top:12px;margin-top:6px}
+.bd{margin-top:10px;font-size:15px}
+.bd summary{cursor:pointer;font-weight:700}
+.tbl-wrap{overflow-x:auto;margin-top:8px}
+table{border-collapse:collapse;width:100%;font-size:14px}
+th,td{padding:7px 10px;border-bottom:1px solid var(--line);text-align:right;white-space:nowrap}
+th:first-child,td:first-child{text-align:left;white-space:normal}
+th small{display:block;font-weight:400;color:var(--slate)}
+
+/* sections */
+.section{padding:36px 0}
+.section.tint{background:#fff;border-top:1px solid var(--line);border-bottom:1px solid var(--line)}
+.three{display:grid;gap:22px;margin-top:20px}
+@media(min-width:800px){.three{grid-template-columns:repeat(3,1fr);gap:32px}}
+.three h3{margin-bottom:6px}
+.three p{color:var(--slate);font-size:16px}
+ol.steps{margin:20px 0 0;padding:0;list-style:none;display:grid;gap:14px;counter-reset:s;max-width:62ch}
+ol.steps li{counter-increment:s;display:grid;grid-template-columns:34px 1fr;gap:14px;align-items:start}
+ol.steps li::before{content:counter(s);width:34px;height:34px;border-radius:50%;background:var(--ink);color:#fff;display:grid;place-items:center;font:700 16px/1 var(--sans)}
+ol.steps b{display:block}
+
+/* forms */
+.panel{background:var(--card);border:1px solid var(--line);border-top:6px solid var(--ink);border-radius:4px;padding:26px 22px;margin:32px 0}
+.panel h1{font-size:clamp(28px,5vw,36px);margin-bottom:8px}
+.field{display:grid;gap:6px;margin:0 0 18px}
+.field>label,.field>legend,legend.lbl{font-weight:700;font-size:16px;padding:0}
+fieldset.field{border:0;margin:0 0 18px;padding:0;min-width:0}
+input[type=text],input[type=email],input[type=tel],input[type=number],select,textarea{width:100%;min-height:46px;padding:10px 12px;border:1px solid #7C8AA0;border-radius:4px;background:#fff;color:var(--ink);font:400 17px/1.4 var(--sans)}
+textarea{min-height:130px;resize:vertical}
+.hintx{font-size:14px;color:var(--slate);margin:0}
+.prefix{display:flex}
+.prefix span{display:grid;place-items:center;padding:0 12px;border:1px solid #7C8AA0;border-right:0;border-radius:4px 0 0 4px;background:var(--paper);font-weight:700}
+.prefix input{border-radius:0 4px 4px 0}
+.choices{display:flex;flex-wrap:wrap;gap:8px 20px}
+.choice{display:flex;gap:9px;align-items:center;cursor:pointer;min-height:36px}
+.choice input{width:20px;height:20px;accent-color:var(--ink);margin:0}
+.consents{border-top:1px solid var(--line);padding-top:16px;margin-top:6px}
+.consents .choice{align-items:flex-start;margin-bottom:10px}
+.consents .choice input{margin-top:3px;flex:none}
+.msg{margin:14px 0 0;padding:10px 12px;border-radius:4px;font-size:15px;border:1px solid}
+.msg.err{color:var(--danger);border-color:#E7B4BD;background:#FDF3F5}
+.msg.ok{color:var(--ok);border-color:#B5D8C5;background:#F1FAF5}
+.msg.info{color:var(--ink);border-color:var(--line);background:var(--paper)}
+.msg:empty{display:none}
+.code{font:700 28px/1 var(--sans);letter-spacing:.35em;text-align:center}
+.badge{display:inline-block;font-size:13px;font-weight:700;padding:2px 8px;border-radius:3px;border:1px solid var(--line);background:var(--paper);color:var(--slate);margin-left:8px;vertical-align:middle}
+.badge.good{color:var(--ok);border-color:#B5D8C5;background:#F1FAF5}
+dl.profile{margin:0;display:grid;gap:0}
+dl.profile div{display:grid;grid-template-columns:130px 1fr;gap:10px;padding:11px 0;border-bottom:1px solid var(--line)}
+dl.profile dt{color:var(--slate);font-size:15px}
+dl.profile dd{margin:0;overflow-wrap:anywhere}
+.stats{display:grid;grid-template-columns:1fr 1fr;gap:14px;margin:18px 0}
+.stat{background:#fff;border:1px solid var(--line);border-radius:4px;padding:14px 16px}
+.stat b{display:block;font:600 30px/1.1 var(--serif)}
+.stat span{font-size:14px;color:var(--slate)}
+.stack{display:grid;gap:26px;margin:28px 0}
+.draft{border:1px dashed var(--gold-deep);background:#FFFBEA;color:#5C4700;padding:10px 12px;border-radius:4px;font-size:15px;margin:0 0 18px}
+.legal h2{font-size:22px;margin:22px 0 6px}
+.legal p,.legal li{font-size:16px}
+.loading{padding:60px 20px;text-align:center;color:var(--slate)}
+
+/* footer */
+.foot-site{border-top:1px solid var(--line);background:#fff;margin-top:24px}
+.foot-site .in{max-width:1080px;margin:0 auto;padding:22px 20px;display:flex;flex-wrap:wrap;gap:10px 28px;justify-content:space-between;font-size:14px;color:var(--slate)}
+.foot-site a{color:var(--slate)}
+.foot-site p{margin:0;max-width:60ch}
+
+@media(prefers-reduced-motion:no-preference){.bar i{transition:width .5s ease}}
+@media(max-width:480px){dl.profile div{grid-template-columns:1fr;gap:2px}}
+</style>
+</head>
+<body>
+<a class="skip" href="#main">Skip to content</a>
+<header class="top"><div class="in">
+  <a class="brand" href="#/" aria-label="Bankers Voice India, home">
+    <svg width="30" height="30" viewBox="0 0 30 30" aria-hidden="true"><rect width="30" height="30" rx="5" fill="#0A2647"/><rect x="7" y="19" width="16" height="3" rx="1.5" fill="#C9A227"/><path d="M9 12.5l4 4 8-8.5" fill="none" stroke="#fff" stroke-width="2.6" stroke-linecap="round" stroke-linejoin="round"/></svg>
+    <span>Bankers Voice India</span>
+  </a>
+  <nav class="topnav" id="nav" aria-label="Main"></nav>
+</div></header>
+
+<main id="main" tabindex="-1"><p class="loading">Loading…</p></main>
+
+<footer class="foot-site"><div class="in">
+  <p>Bankers Voice India is an independent platform for bank employees. Results show participating users only, not all bankers.</p>
+  <p><a href="#/privacy">Privacy notice</a> &nbsp; <a href="#/terms">Terms of use</a></p>
+</div></footer>
+
+<script src="supabase.js"></script>
+<script>
+(() => {
+'use strict';
+
+/* ───────────── Config ───────────── */
+const CONFIG = {
+  SUPABASE_URL: 'https://pzyqonrxirzxambgcrew.supabase.co',
+  SUPABASE_ANON_KEY: 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6InB6eXFvbnJ4aXJ6eGFtYmdjcmV3Iiwicm9sZSI6ImFub24iLCJpYXQiOjE3OTA2MTUyMTIsImV4cCI6MjEwNjE5MTIxMn0.ufYrfUxjBD4PewG7b0GuO6rdfYtF6BdKprzMb8VfsW8',
+  SHOW_COUNTER_FROM: 50,     // never show a tiny "registered" number
+  RESEND_SECONDS: 30
+};
+
+const BANKS = ['State Bank of India','Punjab National Bank','Bank of Baroda','Canara Bank','Union Bank of India','Bank of India','Indian Bank','Central Bank of India','Indian Overseas Bank','UCO Bank','Bank of Maharashtra','Punjab & Sind Bank','HDFC Bank','ICICI Bank','Axis Bank','Kotak Mahindra Bank','IndusInd Bank','Yes Bank','IDBI Bank','IDFC FIRST Bank','Federal Bank','South Indian Bank','Karnataka Bank','Karur Vysya Bank','City Union Bank','RBL Bank','Bandhan Bank','DCB Bank','CSB Bank','Dhanlaxmi Bank','Tamilnad Mercantile Bank','Jammu & Kashmir Bank','AU Small Finance Bank','Equitas Small Finance Bank','Ujjivan Small Finance Bank','India Post Payments Bank','Regional Rural Bank','Cooperative bank','Other'];
+const STATES = ['Andaman and Nicobar Islands','Andhra Pradesh','Arunachal Pradesh','Assam','Bihar','Chandigarh','Chhattisgarh','Dadra and Nagar Haveli and Daman and Diu','Delhi','Goa','Gujarat','Haryana','Himachal Pradesh','Jammu and Kashmir','Jharkhand','Karnataka','Kerala','Ladakh','Lakshadweep','Madhya Pradesh','Maharashtra','Manipur','Meghalaya','Mizoram','Nagaland','Odisha','Puducherry','Punjab','Rajasthan','Sikkim','Tamil Nadu','Telangana','Tripura','Uttar Pradesh','Uttarakhand','West Bengal'];
+const CATEGORIES = ['Employee representation','Working hours','Staffing / workload','Transfers','Promotions','Salary / benefits','Pension','Technology','Targets','Branch operations','Leave','Other'];
+
+const ERR = {
+  not_signed_in: 'Please log in first.',
+  not_registered: 'Finish registration first.',
+  already_registered: 'This account is already registered. Log in instead.',
+  consent_required: 'Accept the two required consents to continue.',
+  invalid_mobile: 'Enter a valid 10-digit Indian mobile number.',
+  mobile_taken: 'This mobile number is already registered.',
+  poll_closed: 'This poll is no longer open.',
+  choose_option: 'Choose an option first.',
+  choose_one: 'Choose one option only.',
+  invalid_option: 'That option is not valid. Reload and try again.',
+  already_voted: 'You have already voted in this poll.',
+  vote_first: 'Vote to see the results.',
+  rate_limited: 'You can raise up to 3 issues in 24 hours. Please try again later.',
+  invalid_category: 'Choose a category.'
+};
+function errText(e) {
+  const m = (e && (e.message || e.error_description)) || '';
+  for (const k in ERR) if (m.includes(k)) return ERR[k];
+  if (/rate limit|too many|over_email_send_rate_limit|security purposes/i.test(m)) return 'Too many attempts. Wait a few minutes, then try again.';
+  if (/token|otp/i.test(m) && /expired|invalid/i.test(m)) return 'That code is wrong or has expired. Check it, or request a new code.';
+  if (/failed to fetch|network/i.test(m)) return 'No connection. Check your internet and try again.';
+  return 'Something went wrong. Please try again.';
+}
+
+/* ───────────── Setup ───────────── */
+const sb = window.supabase.createClient(CONFIG.SUPABASE_URL, CONFIG.SUPABASE_ANON_KEY, {
+  auth: { persistSession: true, autoRefreshToken: true, detectSessionInUrl: false }
+});
+const $ = (s, r = document) => r.querySelector(s);
+const $$ = (s, r = document) => Array.from(r.querySelectorAll(s));
+const esc = s => String(s ?? '').replace(/[&<>"']/g, c => ({ '&': '&amp;', '<': '&lt;', '>': '&gt;', '"': '&quot;', "'": '&#39;' }[c]));
+const S = { session: null, me: null, polls: [], stats: null, results: {}, sel: {}, timer: null };
+
+async function rpc(name, args) {
+  const { data, error } = await sb.rpc(name, args || {});
+  if (error) throw error;
+  return data;
+}
+const store = {
+  get(k) { try { return JSON.parse(sessionStorage.getItem(k)); } catch { return null; } },
+  set(k, v) { try { sessionStorage.setItem(k, JSON.stringify(v)); } catch {} },
+  del(k) { try { sessionStorage.removeItem(k); } catch {} }
+};
+(function restorePending() {
+  const p = store.get('bv_pending');
+  if (p && p.pollId && Array.isArray(p.ids)) S.sel[p.pollId] = new Set(p.ids);
+})();
+
+async function loadMe() { try { S.me = S.session ? await rpc('bv_me') : null; } catch { S.me = null; } }
+async function loadPolls() { try { S.polls = (await rpc('bv_active_polls')) || []; } catch { S.polls = []; } }
+async function loadStats() { try { S.stats = await rpc('bv_public_stats'); } catch { S.stats = null; } }
+
+/* ───────────── Chrome ───────────── */
+function renderNav() {
+  const n = $('#nav');
+  n.innerHTML = S.me
+    ? `<a href="#/home">My polls</a><a href="#/account">Account</a>`
+    : `<a href="#/login">Log in</a><a href="#/join" class="btn" style="color:#fff;min-height:40px;padding:8px 16px">Register</a>`;
+}
+function setMain(html, title) {
+  const m = $('#main');
+  m.innerHTML = html;
+  document.title = title ? `${title} | Bankers Voice India` : 'Bankers Voice India';
+  m.focus({ preventScroll: true });
+  window.scrollTo(0, 0);
+}
+function msg(el, kind, text) {
+  if (!el) return;
+  el.className = 'msg ' + kind;
+  el.textContent = text || '';
+}
+
+/* ───────────── Polls: ballot + results ───────────── */
+function optionsHtml(p) {
+  const type = p.multi_select ? 'checkbox' : 'radio';
+  const sel = S.sel[p.id] || new Set();
+  return `<fieldset class="opts"><legend class="sr">${esc(p.title)}</legend>` +
+    p.options.map(o => `<label class="opt"><input type="${type}" name="p_${p.id}" value="${esc(o.id)}" ${sel.has(o.id) ? 'checked' : ''}><span class="box" aria-hidden="true"></span><span class="txt">${esc(o.text)}</span></label>`).join('') +
+    `</fieldset>`;
+}
+function pollHtml(p) {
+  const member = !!S.me;
+  const voted = (p.my_options || []).length > 0 && !p.editing;
+  const hint = p.description ? `<p class="hint">${esc(p.description)}</p>` : '';
+  const method = p.methodology ? `<details><summary>How this poll works</summary><p style="margin-top:8px">${esc(p.methodology)}</p></details>` : '';
+  let body;
+  if (voted) {
+    body = `<div class="done"><svg width="20" height="20" viewBox="0 0 20 20" aria-hidden="true"><circle cx="10" cy="10" r="10" fill="#1E6B45"/><path d="M5.5 10.5l3 3 6-6.5" fill="none" stroke="#fff" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/></svg>Your response is recorded</div>
+      <div class="results" data-results="${esc(p.id)}"><p class="hintx">Loading results…</p></div>
+      ${p.allow_change ? `<div class="foot" style="padding-top:0"><button class="btn alt" data-act="change" data-poll="${esc(p.id)}" type="button">Change my response</button></div>` : ''}`;
+  } else if (member) {
+    body = `${optionsHtml(p)}<div class="foot"><button class="btn" data-act="vote" data-poll="${esc(p.id)}" type="button">Submit vote</button>
+      <p class="note">${p.allow_change ? 'You can change your response until the poll closes.' : 'You can vote once. Your name is never shown next to your answer.'}</p>
+      <p class="msg" data-msg="${esc(p.id)}" role="alert"></p></div>`;
+  } else {
+    body = `${optionsHtml(p)}<div class="foot"><button class="btn" data-act="register-to-vote" data-poll="${esc(p.id)}" type="button">Register to vote</button>
+      <p class="note">Registering takes about a minute. Your name, mobile and email are never shown to other participants.</p></div>`;
+  }
+  return `<article class="ballot" data-ballot="${esc(p.id)}"><div class="head"><h2 class="q">${esc(p.title)}</h2>${hint}</div>${body}${method}</article>`;
+}
+function bandHtml(o, total, mine) {
+  return `<div class="bar-row ${mine ? 'mine' : ''}"><div class="bar-top"><span>${esc(o.text)}${mine ? '<span class="mine-tag">Your response</span>' : ''}</span><span class="num">${o.pct}% <small>(${o.count})</small></span></div><div class="bar" role="img" aria-label="${esc(o.text)}: ${o.pct} percent"><i style="width:${Math.max(0, Math.min(100, Number(o.pct) || 0))}%"></i></div></div>`;
+}
+function breakdownHtml(title, bd, data) {
+  if (!bd) return '';
+  if (!bd.shown) return `<details class="bd"><summary>${esc(title)}</summary><p class="hintx" style="margin-top:6px">Not shown yet. Every group needs at least ${data.k} responses before a breakdown is displayed, so no one can be singled out.</p></details>`;
+  const head = bd.groups.map(g => `<th scope="col">${esc(g.label)}<small>${g.n} people</small></th>`).join('');
+  const rows = data.options.map(o => `<tr><th scope="row" style="font-weight:400">${esc(o.text)}</th>${bd.groups.map(g => {
+    const v = (g.options.find(x => x.id === o.id) || {}).pct;
+    return `<td>${v == null ? '-' : v + '%'}</td>`;
+  }).join('')}</tr>`).join('');
+  return `<details class="bd"><summary>${esc(title)}</summary><div class="tbl-wrap"><table><thead><tr><th scope="col"><span class="sr">Option</span></th>${head}</tr></thead><tbody>${rows}</tbody></table></div></details>`;
+}
+function resultsHtml(p, d) {
+  if (!d) return '<p class="hintx">Results are not available right now.</p>';
+  if (!d.available) {
+    if (d.reason === 'after_close') return `<p class="hintx">Results will be published when this poll closes${d.end_at ? ' on ' + esc(new Date(d.end_at).toLocaleDateString('en-IN', { day: 'numeric', month: 'long', year: 'numeric' })) : ''}.</p>`;
+    return `<p class="hintx">Results appear once at least ${d.k} people have voted. ${d.total} so far.</p>`;
+  }
+  const mineSet = new Set(p.my_options || []);
+  return d.options.map(o => bandHtml(o, d.total, mineSet.has(o.id))).join('') +
+    `<p class="disc"><b>${d.total}</b> participating ${d.total === 1 ? 'user' : 'users'} responded. These results represent participating users only and should not be read as the views of all Indian bankers.${p.multi_select ? ' Several options could be chosen, so percentages add up to more than 100%.' : ''}</p>` +
+    breakdownHtml('By scale', d.by_scale, d) + breakdownHtml('By gender', d.by_gender, d);
+}
+async function loadResults(p) {
+  const box = $(`[data-results="${CSS.escape(p.id)}"]`);
+  if (!box) return;
+  try {
+    S.results[p.id] = await rpc('bv_poll_results', { p_poll_id: p.id });
+    box.innerHTML = resultsHtml(p, S.results[p.id]);
+  } catch (e) {
+    box.innerHTML = `<p class="hintx">${esc(errText(e))}</p>`;
+  }
+}
+function refreshCard(p) {
+  const el = $(`[data-ballot="${CSS.escape(p.id)}"]`);
+  if (!el) return;
+  el.outerHTML = pollHtml(p);
+  const voted = (p.my_options || []).length > 0 && !p.editing;
+  if (voted) loadResults(p);
+}
+async function castVote(pollId, btn) {
+  const p = S.polls.find(x => x.id === pollId);
+  const m = $(`[data-msg="${CSS.escape(pollId)}"]`);
+  const ids = Array.from(S.sel[pollId] || []);
+  if (!p) return;
+  if (!ids.length) return msg(m, 'err', p.multi_select ? 'Select at least one option.' : 'Choose an option first.');
+  btn.disabled = true; msg(m, 'info', 'Submitting…');
+  try {
+    await rpc('bv_cast_vote', { p_poll_id: pollId, p_option_ids: ids });
+    p.my_options = ids; p.editing = false; delete S.results[pollId];
+    const pend = store.get('bv_pending'); if (pend && pend.pollId === pollId) store.del('bv_pending');
+    refreshCard(p);
+  } catch (e) {
+    btn.disabled = false; msg(m, 'err', errText(e));
+    if (/already_voted|poll_closed/.test(e.message || '')) { await loadPolls(); }
+  }
+}
+
+/* ───────────── Views ───────────── */
+const views = {};
+
+views[''] = {
+  async load() { await Promise.all([loadPolls(), loadStats()]); },
+  html() {
+    const st = S.stats, first = S.polls[0];
+    const counter = st && st.registered >= CONFIG.SHOW_COUNTER_FROM
+      ? `<p class="counter">${st.registered.toLocaleString('en-IN')} bankers registered${st.banks >= 3 ? ` from ${st.banks} banks` : ''}.</p>` : '';
+    const k = st ? st.k : 10;
+    return `
+<section class="hero"><div class="wrap wide"><div class="grid">
+  <div>
+    <h1>Your voice. Your choice. Your identity stays private.</h1>
+    <p class="lede">A common platform for bankers to express their views on issues that matter to them, and to see what participating bankers think.</p>
+    <div class="row">
+      ${S.me ? `<a class="btn" href="#/home">Go to my polls</a>` : `<a class="btn" href="#/join">Register your voice</a><button class="btn alt" type="button" data-act="scroll-how">How it works</button>`}
+    </div>
+    ${counter}
+  </div>
+  <div>${first ? pollHtml(first) : `<div class="ballot"><div class="head"><h2 class="q">No poll is open right now</h2><p class="hint">Register to take part when the next poll opens.</p></div></div>`}</div>
+</div></div></section>
+
+<section class="section tint"><div class="wrap wide">
+  <h2>Private by design</h2>
+  <div class="three">
+    <div><h3>Never shown to others</h3><p>Your name, mobile number, email and account ID are never visible to other participants.</p></div>
+    <div><h3>What is shown</h3><p>Totals, percentages, and breakdowns by scale or gender, only for groups of at least ${k} people.</p></div>
+    <div><h3>Kept separate</h3><p>Your answers are stored under a scrambled key, apart from your contact details.</p></div>
+  </div>
+</div></section>
+
+<section class="section" id="how"><div class="wrap wide">
+  <h2>How it works</h2>
+  <ol class="steps">
+    <li><div><b>Register</b>Give your name, mobile, email, bank, gender and scale, and accept the consents.</div></li>
+    <li><div><b>Verify your email</b>We send a code to your email. Your bank is self-declared and your mobile is not verified yet.</div></li>
+    <li><div><b>Answer the current poll</b>One response per person. Your name is never shown next to your answer.</div></li>
+    <li><div><b>See the combined result</b>You can also raise an issue. Every issue is reviewed by a moderator before it is published.</div></li>
+  </ol>
+  <p style="margin-top:22px;color:var(--slate)">Results describe participating users only. Every report states how many people took part, how they were verified and what the limits are.</p>
+</div></section>`;
+  },
+  after() { afterPolls(); }
+};
+
+views.join = {
+  html() {
+    const signedIn = !!S.session;
+    const email = signedIn ? (S.session.user.email || '') : (store.get('bv_email') || '');
+    const bank = BANKS.map(b => `<option>${esc(b)}</option>`).join('');
+    const states = STATES.map(s => `<option>${esc(s)}</option>`).join('');
+    return `<div class="wrap"><section class="panel">
+  <h1>Register your voice</h1>
+  <p style="color:var(--slate)">${signedIn ? 'Your email is verified. Add your details to finish.' : 'Your name, mobile and email are never shown to other participants.'}</p>
+  <form id="joinForm" novalidate>
+    <div class="field"><label for="name">Full name</label><input id="name" name="name" type="text" autocomplete="name" required maxlength="100"></div>
+    <div class="field"><label for="email">Email</label><input id="email" name="email" type="email" autocomplete="email" inputmode="email" required value="${esc(email)}" ${signedIn ? 'readonly' : ''}>
+      <p class="hintx">${signedIn ? 'Verified.' : 'We will send a verification code here.'}</p></div>
+    <div class="field"><label for="mobile">Mobile number</label><div class="prefix"><span>+91</span><input id="mobile" name="mobile" type="tel" autocomplete="tel-national" inputmode="numeric" maxlength="14" required></div>
+      <p class="hintx">Used for account uniqueness. Not verified yet.</p></div>
+    <div class="field"><label for="bank">Bank</label><select id="bank" name="bank" required><option value="">Select your bank</option>${bank}</select></div>
+    <fieldset class="field"><legend>Gender</legend><div class="choices">
+      ${['Male', 'Female', 'Prefer not to say'].map(g => `<label class="choice"><input type="radio" name="gender" value="${g}" required>${g}</label>`).join('')}
+    </div></fieldset>
+    <div class="field"><label for="scale">Scale</label><select id="scale" name="scale" required><option value="">Select your scale</option>
+      <option value="I">Scale I</option><option value="II">Scale II</option><option value="III">Scale III</option><option value="Other">Other</option><option value="Prefer not to say">Prefer not to say</option></select></div>
+    <div class="field"><label for="state">State or region <span style="font-weight:400;color:var(--slate)">(optional)</span></label><select id="state" name="state"><option value="">Prefer not to say</option>${states}</select></div>
+    <div class="consents">
+      <label class="choice"><input type="checkbox" id="c_participation"><span>I want to participate in the platform. <b>(required)</b></span></label>
+      <label class="choice"><input type="checkbox" id="c_reporting"><span>I agree that my responses may be used for the stated purposes in aggregated, anonymised form. <b>(required)</b></span></label>
+      <label class="choice"><input type="checkbox" id="c_updates"><span>I agree to receive platform updates.</span></label>
+      <label class="choice"><input type="checkbox" id="c_future"><span>I agree to be contacted about future surveys or participation opportunities.</span></label>
+      <p class="hintx">Read the <a href="#/privacy" target="_blank" rel="noopener">privacy notice</a> and <a href="#/terms" target="_blank" rel="noopener">terms of use</a>.</p>
+    </div>
+    <div class="row" style="margin-top:18px"><button class="btn" id="joinBtn" type="submit">${signedIn ? 'Complete registration' : 'Send verification code'}</button>
+      ${signedIn ? '' : '<a href="#/login">I already registered</a>'}</div>
+    <p class="msg" id="joinMsg" role="alert"></p>
+  </form></section></div>`;
+  },
+  after() {
+    const saved = store.get('bv_reg');
+    if (saved) {
+      $('#name').value = saved.name || ''; $('#mobile').value = saved.mobile || '';
+      $('#bank').value = saved.bank || ''; $('#scale').value = saved.scale || ''; $('#state').value = saved.state || '';
+      const g = $$('input[name=gender]').find(x => x.value === saved.gender); if (g) g.checked = true;
+    }
+    $('#joinForm').addEventListener('submit', onJoin);
+  }
+};
+
+views.login = {
+  html() {
+    return `<div class="wrap"><section class="panel">
+  <h1>Log in</h1>
+  <p style="color:var(--slate)">Enter the email you registered with. We will send you a code. There is no password.</p>
+  <form id="loginForm" novalidate>
+    <div class="field"><label for="lemail">Email</label><input id="lemail" type="email" autocomplete="email" inputmode="email" required value="${esc(store.get('bv_email') || '')}"></div>
+    <div class="row"><button class="btn" id="loginBtn" type="submit">Send code</button><a href="#/join">Register instead</a></div>
+    <p class="msg" id="loginMsg" role="alert"></p>
+  </form></section></div>`;
+  },
+  after() { $('#loginForm').addEventListener('submit', onLogin); }
+};
+
+views.verify = {
+  html() {
+    const email = store.get('bv_email') || '';
+    return `<div class="wrap"><section class="panel">
+  <h1>Enter your code</h1>
+  <p style="color:var(--slate)">We sent a code to <b>${esc(email)}</b>. It can take a minute. Check your spam folder too.</p>
+  <form id="verifyForm" novalidate>
+    <div class="field"><label for="code">Verification code</label><input id="code" class="code" type="text" inputmode="numeric" autocomplete="one-time-code" maxlength="10" required></div>
+    <div class="row"><button class="btn" id="verifyBtn" type="submit">Verify</button>
+      <button class="btn alt" id="resendBtn" type="button" disabled>Resend code</button></div>
+    <p class="msg" id="verifyMsg" role="alert"></p>
+    <p style="margin-top:14px"><a href="#/login">Use a different email</a></p>
+  </form></section></div>`;
+  },
+  after() {
+    $('#verifyForm').addEventListener('submit', onVerify);
+    $('#resendBtn').addEventListener('click', onResend);
+    startResendTimer();
+    $('#code').focus();
+  }
+};
+
+views.home = {
+  needs: 'member',
+  async load() { await loadPolls(); },
+  html() {
+    const me = S.me, first = esc((me.name || '').split(' ')[0]);
+    const share = store.get('bv_justRegistered');
+    const url = location.origin + location.pathname;
+    const shareText = `I've registered on Bankers Voice India. A platform where bankers can privately express their views and participate in community surveys. Your identity remains private from other users. Join here: ${url}`;
+    const shareCard = share ? `<div class="panel" style="margin:0"><h2>You are registered</h2>
+      <p style="color:var(--slate);margin-top:6px">Invite other bankers. The message below does not mention your bank, gender, scale or name.</p>
+      <div class="row"><a class="btn" target="_blank" rel="noopener" href="https://wa.me/?text=${encodeURIComponent(shareText)}">Share on WhatsApp</a>
+      <button class="btn alt" type="button" data-act="copy-link" data-text="${esc(shareText)}">Copy message</button></div>
+      <p class="msg" id="shareMsg" role="status"></p></div>` : '';
+    return `<div class="wrap"><div class="stack">
+  <div><h1>Welcome, ${first}</h1><p style="color:var(--slate);margin-top:8px">Your name, mobile and email are not visible to other participants.</p></div>
+  ${shareCard}
+  <section aria-labelledby="pollsH"><h2 id="pollsH" style="margin-bottom:14px">Open polls</h2>
+    ${S.polls.length ? `<div class="stack" style="margin:0">${S.polls.map(pollHtml).join('')}</div>` : '<p style="color:var(--slate)">No poll is open right now. New polls will appear here.</p>'}
+  </section>
+  <section aria-labelledby="issueH" class="panel" style="margin:0"><h2 id="issueH">Raise an issue</h2>
+    <p style="color:var(--slate);margin-top:6px">Describe a matter that affects bank employees. A moderator reviews every issue before it is published. Please do not name or accuse individuals.</p>
+    <form id="issueForm" novalidate style="margin-top:14px">
+      <div class="field"><label for="ititle">Title</label><input id="ititle" type="text" maxlength="140" required><p class="hintx">8 to 140 characters.</p></div>
+      <div class="field"><label for="icat">Category</label><select id="icat" required><option value="">Select a category</option>${CATEGORIES.map(c => `<option>${esc(c)}</option>`).join('')}</select></div>
+      <div class="field"><label for="idesc">What is the issue?</label><textarea id="idesc" maxlength="2000" required></textarea><p class="hintx">20 to 2000 characters. Stick to facts you can support.</p></div>
+      <button class="btn" id="issueBtn" type="submit">Submit for review</button>
+      <p class="msg" id="issueMsg" role="alert"></p>
+    </form></section>
+</div></div>`;
+  },
+  after() {
+    afterPolls();
+    $('#issueForm').addEventListener('submit', onIssue);
+    store.del('bv_justRegistered');   // share card shows once
+  }
+};
+
+views.account = {
+  needs: 'member',
+  html() {
+    const me = S.me, c = me.consents || {};
+    const badge = (t, good) => `<span class="badge ${good ? 'good' : ''}">${t}</span>`;
+    return `<div class="wrap"><div class="stack">
+  <div><h1>Account</h1></div>
+  <section class="panel" style="margin:0"><h2>Your details</h2>
+    <p class="hintx" style="margin-top:6px">Only you can see this page. Other participants never see these details.</p>
+    <dl class="profile" style="margin-top:10px">
+      <div><dt>Name</dt><dd>${esc(me.name)}</dd></div>
+      <div><dt>Email</dt><dd>${esc(me.email)} ${badge('Email verified', me.email_verified)}</dd></div>
+      <div><dt>Mobile</dt><dd>+91 ${esc(me.mobile)} ${badge(me.mobile_verified ? 'Mobile verified' : 'Mobile not verified', me.mobile_verified)}</dd></div>
+      <div><dt>Bank</dt><dd>${esc(me.bank)} ${badge('Self-declared')}</dd></div>
+      <div><dt>Gender</dt><dd>${esc(me.gender)}</dd></div>
+      <div><dt>Scale</dt><dd>${esc(me.scale)}</dd></div>
+      <div><dt>Activity</dt><dd>${me.polls_answered} polls answered, ${me.issues_submitted} issues raised</dd></div>
+    </dl></section>
+  <section class="panel" style="margin:0"><h2>Your consents</h2>
+    <div class="consents" style="border:0;padding-top:10px">
+      <label class="choice"><input type="checkbox" checked disabled><span>Participation (required, accepted)</span></label>
+      <label class="choice"><input type="checkbox" checked disabled><span>Aggregated, anonymised reporting (required, accepted)</span></label>
+      <label class="choice"><input type="checkbox" data-consent="updates" ${c.updates ? 'checked' : ''}><span>Receive platform updates</span></label>
+      <label class="choice"><input type="checkbox" data-consent="future_contact" ${c.future_contact ? 'checked' : ''}><span>Be contacted about future surveys</span></label>
+    </div>
+    <p class="msg" id="consentMsg" role="status"></p>
+    <p class="hintx" style="margin-top:8px">To withdraw a required consent, delete your account below.</p></section>
+  <section class="panel" style="margin:0"><h2>Session and data</h2>
+    <div class="row" style="margin-top:12px"><button class="btn alt" data-act="signout" type="button">Log out</button></div>
+    <details style="margin-top:22px"><summary style="cursor:pointer;font-weight:700;color:var(--danger)">Delete my account</summary>
+      <p style="margin-top:10px">This permanently removes your name, mobile, email and login. Answers you already gave stay in the combined results, unlinked from you. This cannot be undone.</p>
+      <div class="field"><label for="delConfirm">Type DELETE to confirm</label><input id="delConfirm" type="text" autocomplete="off"></div>
+      <button class="btn danger" id="delBtn" data-act="delete" type="button" disabled>Delete my account</button>
+      <p class="msg" id="delMsg" role="alert"></p></details></section>
+</div></div>`;
+  },
+  after() {
+    $$('[data-consent]').forEach(cb => cb.addEventListener('change', async () => {
+      const m = $('#consentMsg'); msg(m, 'info', 'Saving…');
+      try { await rpc('bv_set_consent', { p_purpose: cb.dataset.consent, p_granted: cb.checked }); S.me.consents[cb.dataset.consent] = cb.checked; msg(m, 'ok', 'Saved.'); }
+      catch (e) { cb.checked = !cb.checked; msg(m, 'err', errText(e)); }
+    }));
+    $('#delConfirm').addEventListener('input', e => { $('#delBtn').disabled = e.target.value.trim() !== 'DELETE'; });
+  }
+};
+
+views.privacy = {
+  html() {
+    return `<div class="wrap legal"><section class="panel"><h1>Privacy notice</h1>
+<p class="draft">Draft. This text must be reviewed by a qualified lawyer against India's Digital Personal Data Protection Act, 2023 before public launch.</p>
+<h2>What we collect</h2><p>Your name, mobile number, email address, bank (as you declare it), gender, scale and, optionally, your state. We also record your answers to polls and any issues you submit, and the consents you give.</p>
+<h2>Why we collect it</h2><p>To let you take part in polls, to prevent duplicate accounts, and to produce combined results and reports about participating users.</p>
+<h2>What others can see</h2><p>Other participants never see your name, mobile, email or any account ID. Results are shown only as totals and percentages, and breakdowns appear only for groups of at least ${S.stats ? S.stats.k : 10} people.</p>
+<h2>How your answers are stored</h2><p>Your answers are stored under a scrambled key that is kept apart from your contact details.</p>
+<h2>Sharing</h2><p>Any report shared outside the platform contains combined figures only, for the purposes stated to you here. We will not share your contact details.</p>
+<h2>Your choices</h2><p>You can withdraw optional consents and delete your account from the Account page. Answers already given remain in combined results, unlinked from you.</p>
+<h2>Contact</h2><p>[Add grievance / privacy contact here before launch.]</p>
+</section></div>`;
+  }
+};
+views.terms = {
+  html() {
+    return `<div class="wrap legal"><section class="panel"><h1>Terms of use</h1>
+<p class="draft">Draft. Have these terms reviewed by a qualified lawyer before public launch.</p>
+<h2>Purpose</h2><p>Bankers Voice India lets bank employees express views and see combined results. It is independent and not run by any bank, union, association or authority.</p>
+<h2>Your account</h2><p>Give accurate details and keep one account. Your bank is self-declared and is not checked yet.</p>
+<h2>Conduct</h2><p>Do not harass, threaten or defame anyone. Do not present allegations as facts. Do not share confidential bank information or personal records. Issues are moderated and may be edited, declined or removed.</p>
+<h2>What results mean</h2><p>Results show the views of participating users only. They are not the views of all bankers.</p>
+<h2>Changes</h2><p>We may update these terms and will tell you about material changes.</p>
+</section></div>`;
+  }
+};
+
+/* ───────────── Shared behaviours ───────────── */
+function afterPolls() {
+  S.polls.forEach(p => { if ((p.my_options || []).length > 0 && !p.editing) loadResults(p); });
+}
+function startResendTimer() {
+  clearInterval(S.timer);
+  const btn = $('#resendBtn'); if (!btn) return;
+  let left = CONFIG.RESEND_SECONDS;
+  const tick = () => {
+    if (!$('#resendBtn')) return clearInterval(S.timer);
+    btn.disabled = left > 0;
+    btn.textContent = left > 0 ? `Resend code in ${left}s` : 'Resend code';
+    left--;
+    if (left < -1) clearInterval(S.timer);
+  };
+  tick(); S.timer = setInterval(tick, 1000);
+}
+async function sendCode(email) {
+  const { error } = await sb.auth.signInWithOtp({ email, options: { shouldCreateUser: true } });
+  if (error) throw error;
+  store.set('bv_email', email);
+}
+async function register(p) {
+  await rpc('bv_register', {
+    p_name: p.name, p_mobile: p.mobile, p_bank: p.bank, p_gender: p.gender, p_scale: p.scale,
+    p_state: p.state || null, p_consents: p.consents
+  });
+  store.del('bv_reg'); store.set('bv_justRegistered', true);
+  await loadMe();
+}
+
+/* ───────────── Handlers ───────────── */
+const EMAIL_RE = /^[^\s@]+@[^\s@]+\.[^\s@]{2,}$/;
+
+async function onJoin(ev) {
+  ev.preventDefault();
+  const m = $('#joinMsg'), btn = $('#joinBtn');
+  const v = {
+    name: $('#name').value.trim(), email: $('#email').value.trim().toLowerCase(),
+    mobile: $('#mobile').value.replace(/\D/g, ''), bank: $('#bank').value,
+    gender: ($$('input[name=gender]').find(x => x.checked) || {}).value || '',
+    scale: $('#scale').value, state: $('#state').value,
+    consents: { participation: $('#c_participation').checked, reporting: $('#c_reporting').checked, updates: $('#c_updates').checked, future_contact: $('#c_future').checked }
+  };
+  if (v.name.length < 2) return msg(m, 'err', 'Enter your full name.');
+  if (!EMAIL_RE.test(v.email)) return msg(m, 'err', 'Enter a valid email address.');
+  let mob = v.mobile; if (mob.length === 12 && mob.startsWith('91')) mob = mob.slice(2); if (mob.length === 11 && mob.startsWith('0')) mob = mob.slice(1);
+  if (!/^[6-9]\d{9}$/.test(mob)) return msg(m, 'err', 'Enter a valid 10-digit Indian mobile number.');
+  v.mobile = mob;
+  if (!v.bank) return msg(m, 'err', 'Select your bank.');
+  if (!v.gender) return msg(m, 'err', 'Select an option for gender.');
+  if (!v.scale) return msg(m, 'err', 'Select your scale.');
+  if (!v.consents.participation || !v.consents.reporting) return msg(m, 'err', 'Accept the two required consents to continue.');
+  btn.disabled = true;
+  try {
+    if (S.session) {                       // email already verified, only details missing
+      msg(m, 'info', 'Saving…');
+      await register(v);
+      renderNav(); location.hash = '#/home';
+    } else {
+      msg(m, 'info', 'Sending code…');
+      store.set('bv_reg', v);
+      await sendCode(v.email);
+      location.hash = '#/verify';
+    }
+  } catch (e) { msg(m, 'err', errText(e)); btn.disabled = false; }
+}
+
+async function onLogin(ev) {
+  ev.preventDefault();
+  const m = $('#loginMsg'), btn = $('#loginBtn');
+  const email = $('#lemail').value.trim().toLowerCase();
+  if (!EMAIL_RE.test(email)) return msg(m, 'err', 'Enter a valid email address.');
+  btn.disabled = true; msg(m, 'info', 'Sending code…');
+  try { store.del('bv_reg'); await sendCode(email); location.hash = '#/verify'; }
+  catch (e) { msg(m, 'err', errText(e)); btn.disabled = false; }
+}
+
+async function onResend() {
+  const m = $('#verifyMsg'), email = store.get('bv_email');
+  if (!email) { location.hash = '#/login'; return; }
+  $('#resendBtn').disabled = true; msg(m, 'info', 'Sending a new code…');
+  try { await sendCode(email); msg(m, 'ok', 'A new code is on its way.'); startResendTimer(); }
+  catch (e) { msg(m, 'err', errText(e)); startResendTimer(); }
+}
+
+async function onVerify(ev) {
+  ev.preventDefault();
+  const m = $('#verifyMsg'), btn = $('#verifyBtn');
+  const email = store.get('bv_email'), token = $('#code').value.replace(/\s/g, '');
+  if (!email) { location.hash = '#/login'; return; }
+  if (!/^\d{6,10}$/.test(token)) return msg(m, 'err', 'Enter the numeric code from your email.');
+  btn.disabled = true; msg(m, 'info', 'Checking…');
+  try {
+    const { data, error } = await sb.auth.verifyOtp({ email, token, type: 'email' });
+    if (error) throw error;
+    S.session = data.session;
+    await loadMe();
+    if (!S.me) {
+      const reg = store.get('bv_reg');
+      if (reg && reg.email === email) { msg(m, 'info', 'Finishing registration…'); await register(reg); }
+    }
+    renderNav();
+    if (S.me) { location.hash = '#/home'; }
+    else { location.hash = '#/join'; }
+  } catch (e) { msg(m, 'err', errText(e)); btn.disabled = false; }
+}
+
+async function onIssue(ev) {
+  ev.preventDefault();
+  const m = $('#issueMsg'), btn = $('#issueBtn');
+  const title = $('#ititle').value.trim(), category = $('#icat').value, description = $('#idesc').value.trim();
+  if (title.length < 8) return msg(m, 'err', 'Give the issue a title of at least 8 characters.');
+  if (!category) return msg(m, 'err', 'Choose a category.');
+  if (description.length < 20) return msg(m, 'err', 'Describe the issue in at least 20 characters.');
+  btn.disabled = true; msg(m, 'info', 'Submitting…');
+  try {
+    await rpc('bv_submit_issue', { p_title: title, p_category: category, p_description: description });
+    $('#issueForm').reset(); msg(m, 'ok', 'Submitted for review. It will be published only after moderation.');
+    S.me.issues_submitted = (S.me.issues_submitted || 0) + 1;
+  } catch (e) { msg(m, 'err', errText(e)); }
+  btn.disabled = false;
+}
+
+document.addEventListener('change', ev => {
+  const inp = ev.target.closest('.ballot input');
+  if (!inp) return;
+  const id = inp.closest('[data-ballot]').dataset.ballot;
+  if (inp.type === 'radio') S.sel[id] = new Set([inp.value]);
+  else { const s = S.sel[id] || (S.sel[id] = new Set()); inp.checked ? s.add(inp.value) : s.delete(inp.value); }
+  const m = $(`[data-msg="${CSS.escape(id)}"]`); if (m && m.classList.contains('err')) msg(m, '', '');
+});
+
+document.addEventListener('click', async ev => {
+  const el = ev.target.closest('[data-act]');
+  if (!el) return;
+  const act = el.dataset.act;
+  if (act === 'vote') return castVote(el.dataset.poll, el);
+  if (act === 'scroll-how') { const t = $('#how'); if (t) t.scrollIntoView({ behavior: window.matchMedia('(prefers-reduced-motion: reduce)').matches ? 'auto' : 'smooth' }); return; }
+  if (act === 'register-to-vote') {
+    const ids = Array.from(S.sel[el.dataset.poll] || []);
+    if (ids.length) store.set('bv_pending', { pollId: el.dataset.poll, ids });
+    location.hash = '#/join'; return;
+  }
+  if (act === 'change') {
+    const p = S.polls.find(x => x.id === el.dataset.poll); if (!p) return;
+    S.sel[p.id] = new Set(p.my_options || []); p.editing = true; refreshCard(p); return;
+  }
+  if (act === 'copy-link') {
+    const m = $('#shareMsg');
+    try { await navigator.clipboard.writeText(el.dataset.text); msg(m, 'ok', 'Copied. Paste it into any chat.'); }
+    catch { msg(m, 'err', 'Could not copy. Select and copy the text manually.'); }
+    return;
+  }
+  if (act === 'signout') {
+    await sb.auth.signOut(); S.session = null; S.me = null; store.del('bv_justRegistered');
+    renderNav(); location.hash = '#/'; return;
+  }
+  if (act === 'delete') {
+    const m = $('#delMsg'); el.disabled = true; msg(m, 'info', 'Deleting…');
+    try {
+      await rpc('bv_delete_account');
+      await sb.auth.signOut().catch(() => {});
+      S.session = null; S.me = null; ['bv_reg', 'bv_email', 'bv_pending', 'bv_justRegistered'].forEach(store.del);
+      renderNav(); location.hash = '#/';
+    } catch (e) { msg(m, 'err', errText(e)); el.disabled = false; }
+  }
+});
+
+/* ───────────── Router ───────────── */
+async function route() {
+  clearInterval(S.timer);
+  const name = (location.hash.replace(/^#\/?/, '') || '').split('?')[0];
+  const key = views[name] ? name : '';
+  const v = views[key];
+
+  if (v.needs === 'member') {
+    if (!S.session) { location.hash = '#/login'; return; }
+    if (!S.me) { location.hash = '#/join'; return; }
+  }
+  if ((key === 'join' || key === 'login') && S.me) { location.hash = '#/home'; return; }
+  if (key === 'verify' && !store.get('bv_email')) { location.hash = '#/login'; return; }
+
+  renderNav();
+  if (v.load) { setMain('<p class="loading">Loading…</p>'); await v.load(); }
+  const titles = { join: 'Register', login: 'Log in', verify: 'Verify', home: 'My polls', account: 'Account', privacy: 'Privacy notice', terms: 'Terms of use' };
+  setMain(v.html(), titles[key]);
+  if (v.after) v.after();
+}
+window.addEventListener('hashchange', route);
+
+/* ───────────── Boot ───────────── */
+(async function boot() {
+  try {
+    const { data } = await sb.auth.getSession();
+    S.session = data.session;
+    if (S.session) await loadMe();
+  } catch {}
+  sb.auth.onAuthStateChange((ev, ses) => { S.session = ses; if (ev === 'SIGNED_OUT') S.me = null; });
+  await route();
+  if ('serviceWorker' in navigator && location.protocol.startsWith('http')) navigator.serviceWorker.register('sw.js').catch(() => {});
+})();
+
+})();
+</script>
+</body>
+</html>
